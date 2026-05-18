@@ -137,15 +137,6 @@ export default function Demo() {
                   Read the full technical write-up →
                 </a>
               </div>
-
-              <div className="mt-6 rounded-lg bg-gold/10 p-4 text-xs text-gold-100">
-                <p className="font-semibold">⚙️ TODO for you</p>
-                <p className="mt-1 leading-relaxed">
-                  Wire <code className="rounded bg-black/30 px-1">mockRecommend()</code>{" "}
-                  in <code className="rounded bg-black/30 px-1">Demo.tsx</code> to your
-                  FastAPI endpoint on HuggingFace Spaces.
-                </p>
-              </div>
             </div>
           </div>
         </div>

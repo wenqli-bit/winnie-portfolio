@@ -133,10 +133,10 @@ export default function Projects() {
             </motion.div>
           ))}
 
-          {/* Empty add-project hint */}
-          {filtered.length < 3 && (
-            <div className="flex h-full min-h-[200px] items-center justify-center rounded-2xl border-2 border-dashed border-stone/20 p-6 text-center text-sm text-stone">
-              + Add a new project in <code className="rounded bg-cream px-1.5">lib/projects.ts</code>
+          {/* More projects coming soon — friendlier than dev TODO */}
+          {filtered.length === 0 && (
+            <div className="col-span-full flex h-40 items-center justify-center text-stone">
+              No projects in this category yet — check back soon.
             </div>
           )}
         </div>
