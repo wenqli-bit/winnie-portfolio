@@ -4,17 +4,26 @@ import { motion } from "framer-motion";
 
 const cards = [
   {
-    tag: "FOUNDER",
+    tag: "FOUNDER · 2022 – PRESENT",
     title: "BriskStarter",
-    body: ["Turning hobby into venture.", "Crafts, design competitions,", "campus exhibitions."],
+    body: [
+      "What started as me making things on weekends",
+      "turned into a six-person team running",
+      "creative competitions and campus exhibitions.",
+    ],
+    extra: "“Make designers’ ideas come alive.”",
     bg: "bg-husky text-white",
     tilt: "tilt-left",
     tagColor: "text-gold",
   },
   {
-    tag: "TRAVELLER",
-    title: "8 provinces · 1 country",
-    body: ["Inner Mongolia · Guizhou ·", "Sichuan · Shaanxi · Henan..."],
+    tag: "TRAVELLER · 8 PROVINCES",
+    title: "Places I’ve fallen in love with",
+    body: [
+      "Horseback in Inner Mongolia · Kayaking in",
+      "Guizhou · Hanfu in Luoyang · Lakes of",
+      "Sichuan · Quiet trails in Hebei.",
+    ],
     extra: "Next stop: Seattle 🐾",
     bg: "bg-white border-2 border-gold text-ink",
     tilt: "tilt-right",
@@ -23,7 +32,11 @@ const cards = [
   {
     tag: "THINGS THAT SHAPED ME",
     title: "Many lives, one me",
-    body: ["Aerobic dance · Campus radio", "Volunteering · Team leadership", "Creative competitions"],
+    body: [
+      "Aerobic-dance competitor (city finalist)",
+      "Campus radio host · Repeat volunteer",
+      "Team captain, group-project survivor",
+    ],
     bg: "bg-gold text-husky-deep",
     tilt: "tilt-slight",
     tagColor: "text-husky-deep",
@@ -31,7 +44,12 @@ const cards = [
   {
     tag: "NOW",
     title: "This week, I'm...",
-    body: ["📚 Finishing MS at UW", "🏔 Hiking Mt Rainier", "🧶 Crafting something new"],
+    body: [
+      "📚 Finishing my MS at UW",
+      "🏔 Planning a Mt. Rainier hike",
+      "🧶 Crafting something tiny and ridiculous",
+      "☕ Open to coffee chats — say hi!",
+    ],
     bg: "bg-white border border-ink text-ink",
     tilt: "tilt-right",
     tagColor: "text-husky",
@@ -46,8 +64,10 @@ export default function Life() {
         <h2 className="mt-3 font-display text-5xl font-extrabold text-ink">
           The Stories Behind Me
         </h2>
-        <p className="mt-3 text-stone italic">
-          Keep exploring. Keep challenging. Keep making.
+        <p className="mt-3 max-w-2xl text-lg text-stone">
+          A portfolio of code is half a person. Here&apos;s the other half — the
+          ventures, the trips, the side hobbies, and all the small things that
+          turned me into someone who likes both spreadsheets and sewing machines.
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
@@ -71,7 +91,7 @@ export default function Life() {
                   <p key={b}>{b}</p>
                 ))}
                 {c.extra && (
-                  <p className="mt-2 font-bold text-husky-700">{c.extra}</p>
+                  <p className="mt-3 font-bold italic">{c.extra}</p>
                 )}
               </div>
             </motion.div>

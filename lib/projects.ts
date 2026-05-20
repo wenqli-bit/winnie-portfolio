@@ -1,5 +1,20 @@
 export type ProjectCategory = "ml-ai" | "data-analytics" | "entrepreneurial" | "coursework";
 
+export interface Figure {
+  src: string;
+  caption: string;
+  span?: "half" | "full";
+}
+
+export interface StarSection {
+  key: "overview" | "data" | "model" | "results";
+  eyebrow: string;
+  title: string;
+  body: string[];
+  figures?: Figure[];
+  callouts?: string[];
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -7,45 +22,229 @@ export interface Project {
   category: ProjectCategory;
   categoryLabel: string;
   featured?: boolean;
-  cover?: string; // path under /public
+  cover?: string;
   stack: string[];
   summary: string;
-  // Long-form fields (used on project detail page)
-  when?: string;
-  why?: string;
-  what?: string;
-  how?: string;
+  star?: StarSection[];
   insights?: string[];
   links?: { label: string; href: string }[];
+  visualGallery?: Figure[];
+  heroStats?: { value: string; label: string; accent?: boolean }[];
+  comparison?: {
+    title: string;
+    rows: { metric: string; baseline: string; variant: string; delta?: string }[];
+  };
 }
 
 export const projects: Project[] = [
   {
     slug: "news-recommender",
     title: "News Recommendation System",
-    tagline: "LSTM + Attention · 90.77% Top-50 Accuracy",
+    tagline: "LSTM + Multi-Head Attention - 90.77% Top-50 Accuracy",
     category: "ml-ai",
     categoryLabel: "ML / AI",
     featured: true,
-    stack: ["PyTorch", "Pandas", "FastAPI", "D3.js"],
+    stack: ["PyTorch", "Pandas", "FastAPI", "HuggingFace", "D3.js"],
     summary:
-      "Modeled 1.1M user click events as a deep-learning sequence prediction problem. Compared baseline LSTM with a Multi-Head Attention variant; the attention-augmented model lifted Top-50 accuracy from 89.70% to 90.77%.",
-    when: "Spring 2024",
-    why: "Personalized recommendation is the engine behind every modern content platform. I wanted to take a real industrial-scale clickstream and build a recommender end-to-end — from EDA, through model design, to a deployable inference service.",
-    what:
-      "An end-to-end pipeline that ingests 1.1M user clicks across 31K news articles, fuses item embeddings with user context features (device, OS, locale, source), and trains two sequence models — a vanilla LSTM and an LSTM augmented with Multi-Head Self-Attention — to predict the user's next click.",
-    how:
-      "Used pandas for cleaning and label-encoding, PyTorch for both models, and a custom Top-K accuracy metric. Trained for 300 / 250 epochs with Adam; sampled negative examples 1:1 to balance training. Wrapped the trained model in a FastAPI service and deployed to HuggingFace Spaces for the live demo.",
+      "An end-to-end recommender trained on 1,112,623 user clicks and 31,116 news articles, comparing a baseline LSTM with an attention-augmented variant.",
+    heroStats: [
+      { value: "1.1M+", label: "User clicks" },
+      { value: "31,116", label: "News articles" },
+      { value: "90.77%", label: "Top-50 accuracy", accent: true },
+      { value: "+1.07pp", label: "Attention lift" },
+    ],
+    star: [
+      {
+        key: "overview",
+        eyebrow: "Overview",
+        title: "Predicting the next article from sparse click histories.",
+        body: [
+          "This **solo project** builds an **end-to-end news recommender** that ranks likely next-click articles from a user's recent click history and context signals. I handled **preprocessing**, **negative sampling**, **PyTorch modeling**, **evaluation**, and the **FastAPI demo wrapper**.",
+        ],
+        callouts: ["Solo project", "End-to-end ML pipeline", "FastAPI demo wrapper"],
+      },
+      {
+        key: "data",
+        eyebrow: "Data",
+        title: "1.1M clicks, 31K articles, and highly uneven user histories.",
+        body: [
+          "The dataset contains **1,112,623 click events** joined with **250-dimensional article embeddings** and context features including device, operating system, district, country, and source. Because most users clicked only a few articles, I used **1:1 positive/negative sampling** to reduce popularity bias across **31,116 candidate articles**.",
+        ],
+        figures: [
+          {
+            src: "/projects/news-rec/eda-user-clicks-hist-en.png",
+            caption:
+              "User activity is heavily long-tailed, which shaped the sampling strategy and evaluation design.",
+            span: "full",
+          },
+        ],
+        callouts: ["1,112,623 clicks", "31,116 articles", "250-dim news embeddings", "1:1 negative sampling"],
+      },
+      {
+        key: "model",
+        eyebrow: "Model",
+        title: "Baseline LSTM vs. LSTM with multi-head attention.",
+        body: [
+          "I trained a **baseline LSTM** model, then added **multi-head self-attention** over the LSTM outputs. The final variant used **LSTM(hidden=64)** with **2 attention heads**, **CrossEntropy loss**, and **Adam (lr=1e-3)** so the model could assign different importance to each click before producing ranked recommendations.",
+        ],
+        callouts: [
+          "Baseline: LSTM(hidden=64) -> Linear",
+          "Variant: LSTM + MultiHeadAttention(2 heads)",
+          "Loss: CrossEntropy",
+          "Optimizer: Adam, lr=1e-3",
+        ],
+      },
+      {
+        key: "results",
+        eyebrow: "Results",
+        title: "The attention model improved Top-50 accuracy to 90.77%.",
+        body: [
+          "The **LSTM + Attention** model improved Top-50 accuracy from **89.70% to 90.77%**, a **+1.07 percentage-point lift** over the baseline. The training curves also highlighted the next engineering step: stronger regularization and a time-aware validation split.",
+        ],
+        figures: [
+          {
+            src: "/projects/news-rec/curves-lstm-en.png",
+            caption:
+              "Baseline LSTM training curves across 300 epochs.",
+            span: "half",
+          },
+          {
+            src: "/projects/news-rec/curves-attention-en.png",
+            caption:
+              "LSTM with multi-head attention converged to a lower loss and achieved the strongest Top-50 accuracy.",
+            span: "half",
+          },
+        ],
+        callouts: ["89.70% -> 90.77%", "+1.07pp lift", "Overfitting risk identified"],
+      },
+    ],
+    comparison: {
+      title: "Model comparison",
+      rows: [
+        { metric: "Top-50 accuracy (test)", baseline: "89.70%", variant: "90.77%", delta: "+1.07 pp" },
+        { metric: "Final train loss", baseline: "2.46", variant: "1.33", delta: "-46%" },
+        { metric: "Epochs to converge", baseline: "about 250", variant: "about 200", delta: "-20%" },
+        { metric: "Architecture", baseline: "LSTM only", variant: "LSTM + 2 attention heads" },
+      ],
+    },
     insights: [
-      "Multi-Head Attention improved Top-50 accuracy by ~1.07 points (89.70% → 90.77%)",
-      "Training accuracy climbed to 99% while test stayed at ~90% — clear over-fitting signal that informed regularization next steps",
-      "92% of users came from mobile devices, driving a lightweight-model design decision",
+      "Balanced negative sampling prevented popularity-only recommendations.",
+      "Attention made the click history more selective instead of treating every click equally.",
+      "The train/test gap pointed to the next improvement: time-aware validation and stronger regularization.",
     ],
     links: [
-      { label: "Code on GitHub", href: "#" },
-      { label: "Live Demo", href: "#demo" },
-      { label: "Technical write-up", href: "#" },
+      { label: "Code on GitHub", href: "https://github.com/wenqli-bit/winnie-portfolio" },
+      { label: "Try the live demo", href: "/#demo" },
+      { label: "Full notebook", href: "https://github.com/wenqli-bit/winnie-portfolio" },
     ],
+  },
+  {
+    slug: "seattle-smart-parking",
+    title: "Seattle Smart Parking Initiative",
+    tagline: "Tableau analysis for demand-based parking pricing and mobility funding",
+    category: "data-analytics",
+    categoryLabel: "Data Analytics",
+    cover: "/projects/seattle-parking/Seattle_Smart_Parking_Slide.jpg",
+    stack: ["Tableau", "CSV", "Geospatial Analysis", "Public Data", "Policy Analytics"],
+    summary:
+      "A team Tableau project analyzing Seattle paid parking transactions, payment behavior, revenue patterns, and bike infrastructure to propose a demand-based parking rate strategy.",
+    heroStats: [
+      { value: "157K", label: "Parking transactions" },
+      { value: "$633K", label: "Monthly revenue" },
+      { value: "$1.3M", label: "Projected annual uplift", accent: true },
+      { value: "82.7%", label: "Mobile pay share" },
+    ],
+    star: [
+      {
+        key: "overview",
+        eyebrow: "Overview",
+        title: "Turning parking demand into mobility funding.",
+        body: [
+          "This project uses **Seattle paid parking transactions** and **SDOT bike facility data** to evaluate where parking demand is highest and how a targeted rate adjustment could fund broader mobility improvements.",
+        ],
+        figures: [
+          {
+            src: "/projects/seattle-parking/Seattle_Smart_Parking_Slide.jpg",
+            caption:
+              "Final presentation summary: demand-tier pricing, revenue impact, and proposed funding allocation.",
+            span: "full",
+          },
+        ],
+      },
+      {
+        key: "data",
+        eyebrow: "Data",
+        title: "Parking transactions, revenue, payment type, and bike infrastructure.",
+        body: [
+          "The Tableau workbook combines **paid parking transactions**, **blockface-level revenue summaries**, **bike facility records**, and a small revenue allocation table. Key fields include amount paid, duration, payment method, blockface, latitude/longitude, day of week, and time of day.",
+        ],
+      },
+      {
+        key: "model",
+        eyebrow: "Analysis",
+        title: "Segmenting demand by parking duration and location.",
+        body: [
+          "The analysis groups parking activity into **high**, **medium**, and **low demand tiers** based on parking duration. Longer stays were treated as stronger demand signals, then mapped back to blockfaces and revenue to estimate rate-adjustment impact.",
+        ],
+      },
+      {
+        key: "results",
+        eyebrow: "Outcome",
+        title: "A projected $1.3M annual uplift for transit, safety, and bike infrastructure.",
+        body: [
+          "The proposed pricing scenario applies **+25%** to high-demand sessions and **+10%** to medium-demand sessions, producing an estimated **$1,305,652 annual revenue uplift** and a new annual total of **$8,911,716**. The final recommendation allocates the uplift across **transit**, **security**, **bike infrastructure**, and **administration**.",
+        ],
+      },
+    ],
+    comparison: {
+      title: "Scenario impact",
+      rows: [
+        { metric: "Current annual revenue", baseline: "$7,606,068", variant: "$7,606,068" },
+        { metric: "High-demand rate change", baseline: "Current rate", variant: "+25%", delta: "7,805 txns" },
+        { metric: "Medium-demand rate change", baseline: "Current rate", variant: "+10%", delta: "6,095 txns" },
+        { metric: "Projected annual revenue", baseline: "$7,606,068", variant: "$8,911,716", delta: "+$1,305,652" },
+      ],
+    },
+    visualGallery: [
+      {
+        src: "/projects/seattle-parking/parking-transaction-heatmap.png",
+        caption:
+          "Transaction heatmap showing when Seattle curb demand concentrates by day and hour.",
+        span: "full",
+      },
+      {
+        src: "/projects/seattle-parking/payment-method-mix.png",
+        caption:
+          "Payment-method mix highlighting mobile payment dominance across paid parking transactions.",
+      },
+      {
+        src: "/projects/seattle-parking/top-revenue-uplift-blockfaces.png",
+        caption:
+          "Street-level prioritization view ranking blockfaces by estimated incremental revenue.",
+      },
+      {
+        src: "/projects/seattle-parking/bike-facilities-by-district.png",
+        caption:
+          "Bike facility distribution by district, used to connect parking revenue with mobility reinvestment.",
+      },
+      {
+        src: "/projects/seattle-parking/revenue-uplift-allocation.png",
+        caption:
+          "Policy-facing allocation graphic translating projected uplift into transit, safety, bike, and admin funding.",
+      },
+      {
+        src: "/projects/seattle-parking/Seattle_Smart_Parking_Slide.jpg",
+        caption:
+          "Final executive summary slide combining data inputs, pricing tiers, revenue impact, and allocation.",
+        span: "full",
+      },
+    ],
+    insights: [
+      "Duration-based demand tiers made the pricing recommendation easy to explain.",
+      "Mobile payment dominance suggested a strong digital adoption pattern in Seattle parking behavior.",
+      "The final recommendation connected revenue analytics to policy outcomes, not just dashboard metrics.",
+    ],
+    links: [{ label: "Tableau packaged workbook", href: "#" }],
   },
   {
     slug: "briskstarter",
@@ -55,30 +254,48 @@ export const projects: Project[] = [
     categoryLabel: "Entrepreneurial",
     stack: ["Product", "Branding", "Operations", "Marketing"],
     summary:
-      "A campus venture committed to making designers' ideas come alive — organizing creative competitions, running pop-up exhibitions, and producing limited-edition handmade goods.",
-    when: "2022 – 2024",
-    why: "I love making things with my hands as much as I love analyzing data. BriskStarter started as a way to give other student-designers a stage — and turned into a real micro-business with real revenue.",
-    what:
-      "Founded and operated a student-led creative venture. Organized competitions, ran exhibitions, produced handmade product lines (illustrations, woven goods, laser-cut wooden boxes), and led a 6-person team.",
-    how:
-      "Designed brand identity from scratch, coordinated with vendors, ran social campaigns, hosted in-person exhibitions and competitions on campus.",
+      "A campus venture committed to making designers' ideas come alive through competitions, pop-up exhibitions, and handmade goods.",
+    star: [
+      {
+        key: "overview",
+        eyebrow: "Overview",
+        title: "Student designers needed a more visible stage.",
+        body: [
+          "BriskStarter began as a creative outlet and became a small campus venture for showcasing student design work.",
+        ],
+      },
+      {
+        key: "data",
+        eyebrow: "Goal",
+        title: "Build a recognizable brand and operating rhythm.",
+        body: [
+          "I led branding, vendor coordination, event planning, and team operations for a six-person student team.",
+        ],
+      },
+      {
+        key: "model",
+        eyebrow: "Action",
+        title: "Turned creative ideas into physical products and events.",
+        body: [
+          "We organized competitions, ran exhibitions, produced handmade product lines, and marketed them through campus channels.",
+        ],
+      },
+      {
+        key: "results",
+        eyebrow: "Result",
+        title: "Built a bridge between creative work and product execution.",
+        body: [
+          "The project grew into a real team with repeated events, campus visibility, and a stronger sense of creative leadership.",
+        ],
+      },
+    ],
     insights: [
       "Built a recognizable brand and team of 6+ collaborators",
-      "Ran multiple successful campus exhibitions with hundreds of visitors",
-      "Bridged creative and analytical sides — same brain, two outputs",
+      "Ran multiple campus exhibitions with hundreds of visitors",
+      "Connected creative judgment with product and operations discipline",
     ],
     links: [{ label: "Press / write-ups", href: "#" }],
   },
-  // Placeholder — duplicate this block to add more projects.
-  // {
-  //   slug: "your-next-project",
-  //   title: "Your Next Project",
-  //   tagline: "One-liner",
-  //   category: "data-analytics",
-  //   categoryLabel: "Data Analytics",
-  //   stack: ["SQL", "Tableau", "Python"],
-  //   summary: "Short description.",
-  // },
 ];
 
 export function getProject(slug: string): Project | undefined {

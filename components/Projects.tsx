@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { projects, categories, type ProjectCategory } from "@/lib/projects";
@@ -30,7 +31,6 @@ export default function Projects() {
             </p>
           </div>
 
-          {/* Filter pills */}
           <div className="flex flex-wrap gap-2">
             {categories.map((c) => (
               <button
@@ -48,9 +48,7 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Featured card (spans 2 cols) */}
           {featured && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -65,7 +63,7 @@ export default function Projects() {
               >
                 <div>
                   <span className="inline-block rounded-full bg-gold px-3 py-1 text-[10px] font-extrabold tracking-wider text-husky-deep">
-                    ★ FEATURED · {featured.categoryLabel.toUpperCase()}
+                    FEATURED - {featured.categoryLabel.toUpperCase()}
                   </span>
                   <h3 className="mt-6 font-display text-4xl font-bold leading-tight">
                     {featured.title}
@@ -84,15 +82,14 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
-                  <span className="text-sm font-bold text-gold group-hover:translate-x-1 transition-transform">
-                    Read case study →
+                  <span className="text-sm font-bold text-gold transition-transform group-hover:translate-x-1">
+                    Read case study
                   </span>
                 </div>
               </Link>
             </motion.div>
           )}
 
-          {/* Other cards */}
           {others.map((p, i) => (
             <motion.div
               key={p.slug}
@@ -103,40 +100,53 @@ export default function Projects() {
             >
               <Link
                 href={`/projects/${p.slug}`}
-                className="group flex h-full flex-col justify-between rounded-2xl border border-stone/15 bg-white p-6 transition-all hover:-translate-y-1 hover:border-husky hover:shadow-xl"
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone/15 bg-white transition-all hover:-translate-y-1 hover:border-husky hover:shadow-xl"
               >
-                <div>
-                  <span className="inline-block rounded-full bg-cream px-3 py-1 text-[10px] font-extrabold tracking-wider text-husky">
-                    {p.categoryLabel.toUpperCase()}
-                  </span>
-                  <h3 className="mt-4 font-display text-2xl font-bold text-ink">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-stone">{p.tagline}</p>
-                </div>
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.stack.slice(0, 3).map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full bg-cream px-2.5 py-0.5 text-[10px] font-medium text-husky"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                {p.cover && (
+                  <div className="relative aspect-[16/9] border-b border-stone/10 bg-cream">
+                    <Image
+                      src={p.cover}
+                      alt={`${p.title} preview`}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                    />
                   </div>
-                  <span className="text-xs font-bold text-gold group-hover:translate-x-1 transition-transform">
-                    View →
-                  </span>
+                )}
+
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    <span className="inline-block rounded-full bg-cream px-3 py-1 text-[10px] font-extrabold tracking-wider text-husky">
+                      {p.categoryLabel.toUpperCase()}
+                    </span>
+                    <h3 className="mt-4 font-display text-2xl font-bold text-ink">
+                      {p.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-stone">{p.tagline}</p>
+                  </div>
+                  <div className="mt-6 flex items-center justify-between">
+                    <div className="flex flex-wrap gap-1.5">
+                      {p.stack.slice(0, 3).map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full bg-cream px-2.5 py-0.5 text-[10px] font-medium text-husky"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold text-gold transition-transform group-hover:translate-x-1">
+                      View
+                    </span>
+                  </div>
                 </div>
               </Link>
             </motion.div>
           ))}
 
-          {/* More projects coming soon — friendlier than dev TODO */}
           {filtered.length === 0 && (
             <div className="col-span-full flex h-40 items-center justify-center text-stone">
-              No projects in this category yet — check back soon.
+              No projects in this category yet. Check back soon.
             </div>
           )}
         </div>

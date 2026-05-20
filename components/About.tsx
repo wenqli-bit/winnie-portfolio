@@ -23,26 +23,42 @@ export default function About() {
           >
             <p className="text-xs font-bold tracking-[0.3em] text-gold">ABOUT</p>
             <h2 className="mt-3 font-display text-4xl font-extrabold text-ink md:text-5xl">
-              Born curious. <br />
-              Trained as a data scientist.
+              Hi, I&apos;m Winnie. <br />
+              Two sides, same brain.
             </h2>
             <div className="mt-8 space-y-5 text-lg leading-relaxed text-ink/80">
               <p>
-                I&apos;m a Master&apos;s candidate in Data Science at the{" "}
-                <span className="font-semibold text-husky">University of Washington</span>,
-                where I&apos;m learning to turn messy real-world data into clear,
-                useful decisions.
+                I grew up in China splitting my time between two things that feel
+                very different from the outside but identical from the inside:{" "}
+                <span className="font-semibold text-husky">making sense of patterns</span>{" "}
+                (in data, in human behavior, in stories) and{" "}
+                <span className="font-semibold text-husky">making things with my hands</span>{" "}
+                (crafts, exhibitions, the occasional bracelet).
               </p>
               <p>
-                Before grad school, I built a creative-goods venture called{" "}
-                <span className="font-semibold text-husky">BriskStarter</span> and
-                shipped a deep-learning news recommender that hit{" "}
-                <span className="font-semibold text-gold-700">90.77% Top-50 accuracy</span>{" "}
-                on 1.1M real clicks. I keep both sides of my brain busy.
+                On the data side, I&apos;m a Master&apos;s candidate in Data Science at the{" "}
+                <span className="font-semibold text-husky">University of Washington</span>.
+                My favorite project so far was training a deep-learning news recommender
+                on 1.1M real user clicks — wrangling messy clickstreams, fighting
+                over-fitting at 3am, and finally watching Multi-Head Attention lift
+                Top-50 accuracy to{" "}
+                <span className="font-semibold text-gold-700">90.77%</span>. I love
+                the moment when a model finally clicks.
               </p>
               <p>
-                When I&apos;m not coding, you&apos;ll find me hiking around the PNW,
-                making crafts, or planning the next train trip.
+                On the maker side, I founded a campus venture called{" "}
+                <span className="font-semibold text-husky">BriskStarter</span> —
+                we organize creative competitions, run pop-up exhibitions, and
+                ship handmade goods. It started as a hobby and turned into a real
+                team of six.
+              </p>
+              <p>
+                I&apos;ve also been an aerobic-dance competitor, a campus radio host,
+                and a serial volunteer. Now I&apos;m in Seattle. Catch me hiking
+                around Mt. Rainier on weekends.
+              </p>
+              <p className="text-base italic text-stone">
+                — Currently open to <span className="font-semibold not-italic text-husky">Summer 2026 Data Science / Data Analyst roles</span> in the US.
               </p>
             </div>
           </motion.div>
